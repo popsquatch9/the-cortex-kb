@@ -11,6 +11,13 @@ from sentence_transformers import SentenceTransformer
 class SemanticEngine:
     """Handles semantic understanding and reasoning"""
     
+    # Embedding dimensions for fallback mode
+    EMBEDDING_DIM = 384
+    # Index offset for word hashing in fallback embeddings
+    HASH_OFFSET = 3
+    # Max words to use for hashing in fallback embeddings  
+    MAX_HASH_WORDS = 100
+    
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         """
         Initialize the semantic engine
@@ -58,9 +65,9 @@ class SemanticEngine:
     
     def _simple_embedding(self, text: str) -> np.ndarray:
         """Simple embedding for fallback mode"""
-        # Create a simple 384-dimensional embedding based on text features
+        # Create a simple embedding based on text features
         text_lower = text.lower()
-        features = np.zeros(384)
+        features = np.zeros(self.EMBEDDING_DIM)
         
         # Use simple text statistics
         words = text_lower.split()
@@ -70,8 +77,8 @@ class SemanticEngine:
             features[2] = sum(len(w) for w in words) / len(words)  # avg word length
             
             # Use hash of words to populate the rest
-            for i, word in enumerate(words[:100]):
-                idx = hash(word) % 381 + 3
+            for i, word in enumerate(words[:self.MAX_HASH_WORDS]):
+                idx = hash(word) % (self.EMBEDDING_DIM - self.HASH_OFFSET) + self.HASH_OFFSET
                 features[idx] += 1
         
         # Normalize
@@ -95,8 +102,28 @@ class SemanticEngine:
         emb1 = self.embed_text(text1)
         emb2 = self.embed_text(text2)
         
+        return self._cosine_similarity(emb1, emb2)
+    
+    def _cosine_similarity(self, emb1: np.ndarray, emb2: np.ndarray) -> float:
+        """
+        Compute cosine similarity between two embeddings
+        
+        Args:
+            emb1: First embedding
+            emb2: Second embedding
+            
+        Returns:
+            Similarity score (0.0 - 1.0)
+        """
+        norm1 = np.linalg.norm(emb1)
+        norm2 = np.linalg.norm(emb2)
+        
+        # Handle zero norms
+        if norm1 == 0 or norm2 == 0:
+            return 0.0
+        
         # Cosine similarity
-        similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
+        similarity = np.dot(emb1, emb2) / (norm1 * norm2)
         
         # Convert to 0-1 range
         return float((similarity + 1) / 2)
@@ -129,10 +156,7 @@ class SemanticEngine:
                 continue
             
             doc_embedding = self.embed_text(content)
-            similarity = np.dot(query_embedding, doc_embedding) / (
-                np.linalg.norm(query_embedding) * np.linalg.norm(doc_embedding)
-            )
-            similarity = float((similarity + 1) / 2)
+            similarity = self._cosine_similarity(query_embedding, doc_embedding)
             
             if similarity >= threshold:
                 results.append({

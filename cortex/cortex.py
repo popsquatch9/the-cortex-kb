@@ -72,13 +72,10 @@ class CortexKB:
         category = self.semantic_engine.categorize_content(content)
         
         # Update node with additional metadata
-        doc['concepts'] = concepts
-        doc['category'] = category
-        self.graph.nodes[doc_id].update({
+        self.graph.update_node(doc_id, {
             'concepts': concepts,
             'category': category
         })
-        self.graph._save()
         
         # Find related existing documents
         self._link_related_documents(doc_id, content)
@@ -120,11 +117,10 @@ class CortexKB:
         category = self.semantic_engine.categorize_content(text)
         
         # Update node with additional metadata
-        self.graph.nodes[doc_id].update({
+        self.graph.update_node(doc_id, {
             'concepts': concepts,
             'category': category
         })
-        self.graph._save()
         
         # Find related existing documents
         self._link_related_documents(doc_id, text)

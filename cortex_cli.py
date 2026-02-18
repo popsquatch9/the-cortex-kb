@@ -199,11 +199,14 @@ Examples:
     elif args.command == 'organize':
         organized = cortex.organize_by_category()
         
-        print("Documents organized by category:\n")
+        print(f"\nDocuments organized by category:\n")
         for category, docs in sorted(organized.items()):
             print(f"{category.upper()} ({len(docs)} documents):")
             for doc in docs:
-                print(f"  - {doc.get('name', 'Untitled')} (ID: {doc.get('id')[:8]}...)")
+                doc_id = doc.get('id', '')
+                # Safely truncate doc ID for display
+                doc_id_display = doc_id[:8] + '...' if len(doc_id) > 8 else doc_id
+                print(f"  - {doc.get('name', 'Untitled')} (ID: {doc_id_display})")
             print()
 
 

@@ -13,6 +13,9 @@ from bs4 import BeautifulSoup
 class SourceDiscovery:
     """Discovers and fetches external sources"""
     
+    # Maximum content length to store from external sources
+    MAX_CONTENT_LENGTH = 5000
+    
     def __init__(self, max_sources: int = 5):
         """
         Initialize the source discovery engine
@@ -75,7 +78,7 @@ class SourceDiscovery:
             return {
                 'url': url,
                 'title': title_text,
-                'content': text[:5000],  # Limit content length
+                'content': text[:self.MAX_CONTENT_LENGTH],  # Limit content length
                 'type': 'web',
                 'source': 'external'
             }

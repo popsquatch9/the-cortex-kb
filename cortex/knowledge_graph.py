@@ -63,6 +63,25 @@ class KnowledgeGraph:
         self._save()
         return node_id
     
+    def update_node(self, node_id: str, data: Dict[str, Any]) -> bool:
+        """
+        Update an existing node with new data
+        
+        Args:
+            node_id: Node ID to update
+            data: Data to update in the node
+            
+        Returns:
+            True if successful, False if node doesn't exist
+        """
+        if node_id not in self.nodes:
+            return False
+        
+        self.nodes[node_id].update(data)
+        self.nodes[node_id]['updated_at'] = datetime.now().isoformat()
+        self._save()
+        return True
+    
     def get_node(self, node_id: str) -> Optional[Dict[str, Any]]:
         """Get a node by ID"""
         return self.nodes.get(node_id)
