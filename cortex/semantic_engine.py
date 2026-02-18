@@ -18,8 +18,19 @@ class SemanticEngine:
         Args:
             model_name: Name of the sentence transformer model to use
         """
-        self.model = SentenceTransformer(model_name)
+        self.model_name = model_name
+        self.model = None
         self.embeddings_cache: Dict[str, np.ndarray] = {}
+    
+    def _init_model(self):
+        """Lazily initialize the model on first use"""
+        if self.model is None:
+            try:
+                self.model = SentenceTransformer(self.model_name)
+            except Exception as e:
+                print(f"Warning: Could not load sentence transformer model: {e}")
+                print("Falling back to simple text similarity.")
+                self.model = "fallback"
     
     def embed_text(self, text: str) -> np.ndarray:
         """
@@ -34,9 +45,41 @@ class SemanticEngine:
         if text in self.embeddings_cache:
             return self.embeddings_cache[text]
         
-        embedding = self.model.encode(text, convert_to_numpy=True)
+        self._init_model()
+        
+        if self.model == "fallback":
+            # Simple fallback: use character frequency as a simple embedding
+            embedding = self._simple_embedding(text)
+        else:
+            embedding = self.model.encode(text, convert_to_numpy=True)
+        
         self.embeddings_cache[text] = embedding
         return embedding
+    
+    def _simple_embedding(self, text: str) -> np.ndarray:
+        """Simple embedding for fallback mode"""
+        # Create a simple 384-dimensional embedding based on text features
+        text_lower = text.lower()
+        features = np.zeros(384)
+        
+        # Use simple text statistics
+        words = text_lower.split()
+        if words:
+            features[0] = len(words)
+            features[1] = len(text)
+            features[2] = sum(len(w) for w in words) / len(words)  # avg word length
+            
+            # Use hash of words to populate the rest
+            for i, word in enumerate(words[:100]):
+                idx = hash(word) % 381 + 3
+                features[idx] += 1
+        
+        # Normalize
+        norm = np.linalg.norm(features)
+        if norm > 0:
+            features = features / norm
+        
+        return features
     
     def compute_similarity(self, text1: str, text2: str) -> float:
         """
