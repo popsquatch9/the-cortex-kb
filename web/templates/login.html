@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Cortex Login</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body class="auth-body">
+    <main class="auth-wrap">
+      <section class="auth-card">
+        <h1>The Cortex</h1>
+        <p class="subtitle">Knowledge Dashboard Access</p>
+        <p class="hint">Connected target: {{ ghostline_base_url }}</p>
+        <p class="hint">Allowed domain: @{{ email_domain }}</p>
+
+        {% if sso_misconfigured %}
+        <div class="warning">
+          Strict SSO mode is enabled, but Google OAuth is not configured. Set
+          <strong>GOOGLE_CLIENT_ID</strong> and <strong>GOOGLE_CLIENT_SECRET</strong>.
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if oauth_enabled %}
+        <a href="/auth/google/login" class="sso-btn">Continue with Google (@{{ email_domain }})</a>
+        <div class="divider"><span>or</span></div>
+        {% else %}
+        <p class="hint">Google SSO is not configured. Using local domain login.</p>
+        {% endif %}
+
+        {% if local_login_enabled %}
+        <form method="post" action="/login" class="auth-form">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@ghostline.boo" required />
+
+          <label for="password">Dashboard Password (optional)</label>
+          <input id="password" name="password" type="password" placeholder="If configured" />
+
+          <button type="submit">Enter Dashboard</button>
+        </form>
+        {% else %}
+        <p class="hint">Local login is disabled in strict SSO mode.</p>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Cortex Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>The Cortex Dashboard</h1>
+        <p class="subtitle">Signed in as {{ email }}</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="pill {{ 'ok' if ghostline.ok else 'bad' }}">
+          Ghostline {{ 'Connected' if ghostline.ok else 'Unavailable' }}
+          {% if ghostline.status_code %}(HTTP {{ ghostline.status_code }}){% endif %}
+          · {{ ghostline.latency_ms }} ms
+        </span>
+        <form method="post" action="/logout">
+          <button type="submit" class="ghost-btn">Log out</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card stats">
+        <h2>Knowledge Base</h2>
+        <div class="stats-grid">
+          <div><strong>{{ stats.total_entries }}</strong><span>Entries</span></div>
+          <div><strong>{{ stats.unique_tags }}</strong><span>Unique Tags</span></div>
+          <div><strong>{{ stats.relationships }}</strong><span>Relationships</span></div>
+        </div>
+      </section>
+
+      <section class="card search">
+        <h2>Search</h2>
+        <form method="get" action="/" class="search-form">
+          <input name="q" value="{{ q }}" placeholder="Ask your knowledge base..." />
+          <button type="submit">Search</button>
+        </form>
+
+        {% if q and results|length == 0 %}
+        <p class="hint">No results found for "{{ q }}".</p>
+        {% endif %}
+
+        {% if results %}
+        <ul class="results">
+          {% for r in results %}
+          <li>
+            <div class="row">
+              <h3>{{ r.title }}</h3>
+              <span class="chip">{{ (r.relevance * 100)|round|int }}%</span>
+            </div>
+            <p>{{ r.summary }}</p>
+            <small>{{ r.source }}</small>
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </section>
+
+      <section class="card tags">
+        <h2>Top Tags</h2>
+        <div class="tags-wrap">
+          {% for tag, count in top_tags %}
+          <span class="tag">{{ tag }} <em>{{ count }}</em></span>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="card recent">
+        <h2>Recent Entries</h2>
+        <ul class="recent-list">
+          {% for e in recent_entries %}
+          <li>
+            <div class="row">
+              <strong>{{ e.title }}</strong>
+              <span class="chip muted">{{ e.quality }}</span>
+            </div>
+            <small>{{ e.source_type }} · {{ e.created_at[:10] }}</small>
+          </li>
+          {% endfor %}
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
