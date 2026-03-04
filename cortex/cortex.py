@@ -7,11 +7,15 @@ import os
 import hashlib
 from typing import List, Dict, Any, Optional
 from pathlib import Path
+from dotenv import load_dotenv
 
 from .ingestion import DocumentIngester
 from .knowledge_graph import KnowledgeGraph
 from .semantic_engine import SemanticEngine
 from .source_discovery import SourceDiscovery
+
+# Load environment variables
+load_dotenv()
 
 
 class CortexKB:
@@ -26,7 +30,9 @@ class CortexKB:
         self, 
         storage_path: str = "./cortex_data",
         enable_external_sources: bool = True,
-        relevance_threshold: float = 0.7
+        relevance_threshold: float = 0.7,
+        llm_provider: Optional[str] = None,
+        llm_api_key: Optional[str] = None
     ):
         """
         Initialize the Cortex Knowledge Base
@@ -35,15 +41,24 @@ class CortexKB:
             storage_path: Directory for storing knowledge base data
             enable_external_sources: Whether to fetch external sources
             relevance_threshold: Minimum relevance score for content (0.0 - 1.0)
+            llm_provider: LLM provider to use ('claude', 'gemini', or None)
+            llm_api_key: API key for LLM (optional, uses env var)
         """
         self.storage_path = Path(storage_path)
         self.enable_external_sources = enable_external_sources
         self.relevance_threshold = relevance_threshold
         
+        # Get LLM configuration from environment if not provided
+        if llm_provider is None:
+            llm_provider = os.getenv('LLM_PROVIDER', 'none')
+        
         # Initialize components
         self.ingester = DocumentIngester()
         self.graph = KnowledgeGraph(storage_path)
-        self.semantic_engine = SemanticEngine()
+        self.semantic_engine = SemanticEngine(
+            llm_provider=llm_provider,
+            llm_api_key=llm_api_key
+        )
         self.source_discovery = SourceDiscovery()
     
     def add_document(self, file_path: str, discover_sources: bool = True) -> str:
@@ -257,3 +272,66 @@ class CortexKB:
                     'has_source',
                     weight=vetted_source.get('quality_score', 0.5)
                 )
+    
+    def ask_question(self, question: str, doc_id: Optional[str] = None) -> str:
+        """
+        Ask a question about a document or the entire knowledge base
+        
+        Args:
+            question: Question to ask
+            doc_id: Optional document ID to ask about. If None, searches entire knowledge base
+            
+        Returns:
+            Answer to the question
+        """
+        if doc_id:
+            # Ask about specific document
+            doc = self.graph.get_node(doc_id)
+            if not doc:
+                return f"Document {doc_id} not found."
+            context = str(doc.get('content', ''))
+        else:
+            # Search for relevant documents and use them as context
+            results = self.search(question, top_k=3)
+            if not results:
+                return "No relevant documents found in the knowledge base."
+            context = "\n\n---\n\n".join([
+                str(r.get('content', '')) for r in results
+            ])
+        
+        return self.semantic_engine.answer_question(question, context)
+    
+    def summarize_document(self, doc_id: str, max_length: int = 200) -> str:
+        """
+        Summarize a document
+        
+        Args:
+            doc_id: Document ID
+            max_length: Maximum length in words
+            
+        Returns:
+            Summary text
+        """
+        doc = self.graph.get_node(doc_id)
+        if not doc:
+            return f"Document {doc_id} not found."
+        
+        content = str(doc.get('content', ''))
+        return self.semantic_engine.summarize(content, max_length)
+    
+    def get_insights(self, doc_id: str) -> str:
+        """
+        Get AI-generated insights about a document
+        
+        Args:
+            doc_id: Document ID
+            
+        Returns:
+            Insights text
+        """
+        doc = self.graph.get_node(doc_id)
+        if not doc:
+            return f"Document {doc_id} not found."
+        
+        content = str(doc.get('content', ''))
+        return self.semantic_engine.generate_insights(content)

@@ -80,6 +80,21 @@ Examples:
     # Organize command
     subparsers.add_parser('organize', help='Show documents organized by category')
     
+    # Ask command (LLM-powered Q&A)
+    ask_parser = subparsers.add_parser('ask', help='Ask a question about your knowledge base (requires LLM)')
+    ask_parser.add_argument('question', help='Question to ask')
+    ask_parser.add_argument('--doc-id', help='Optional: Ask about a specific document')
+    
+    # Summarize command (LLM-powered)
+    summarize_parser = subparsers.add_parser('summarize', help='Summarize a document (requires LLM)')
+    summarize_parser.add_argument('doc_id', help='Document ID to summarize')
+    summarize_parser.add_argument('--length', type=int, default=200, 
+                                  help='Maximum summary length in words (default: 200)')
+    
+    # Insights command (LLM-powered)
+    insights_parser = subparsers.add_parser('insights', help='Get AI insights about a document (requires LLM)')
+    insights_parser.add_argument('doc_id', help='Document ID to analyze')
+    
     args = parser.parse_args()
     
     if not args.command:
@@ -208,6 +223,21 @@ Examples:
                 doc_id_display = doc_id[:8] + '...' if len(doc_id) > 8 else doc_id
                 print(f"  - {doc.get('name', 'Untitled')} (ID: {doc_id_display})")
             print()
+    
+    elif args.command == 'ask':
+        print("🤔 Thinking...")
+        answer = cortex.ask_question(args.question, args.doc_id)
+        print(f"\n💡 Answer:\n{answer}\n")
+    
+    elif args.command == 'summarize':
+        print("📝 Summarizing...")
+        summary = cortex.summarize_document(args.doc_id, args.length)
+        print(f"\n📋 Summary:\n{summary}\n")
+    
+    elif args.command == 'insights':
+        print("🔍 Analyzing...")
+        insights = cortex.get_insights(args.doc_id)
+        print(f"\n✨ Insights:\n{insights}\n")
 
 
 if __name__ == '__main__':

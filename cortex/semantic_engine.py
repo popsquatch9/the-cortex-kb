@@ -3,9 +3,15 @@ Semantic Search and Reasoning Module
 Provides intelligent search and understanding capabilities
 """
 
+import os
 from typing import List, Dict, Any, Optional
 import numpy as np
 from sentence_transformers import SentenceTransformer
+
+try:
+    from .llm_provider import LLMClient
+except ImportError:
+    LLMClient = None
 
 
 class SemanticEngine:
@@ -18,16 +24,32 @@ class SemanticEngine:
     # Max words to use for hashing in fallback embeddings  
     MAX_HASH_WORDS = 100
     
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+    def __init__(
+        self, 
+        model_name: str = "all-MiniLM-L6-v2",
+        llm_provider: Optional[str] = None,
+        llm_api_key: Optional[str] = None
+    ):
         """
         Initialize the semantic engine
         
         Args:
             model_name: Name of the sentence transformer model to use
+            llm_provider: LLM provider to use ('claude', 'gemini', or None)
+            llm_api_key: API key for LLM provider (optional, uses env var)
         """
         self.model_name = model_name
         self.model = None
         self.embeddings_cache: Dict[str, np.ndarray] = {}
+        
+        # Initialize LLM client if requested
+        self.llm_client = None
+        if llm_provider and LLMClient:
+            try:
+                self.llm_client = LLMClient(provider=llm_provider, api_key=llm_api_key)
+            except Exception as e:
+                print(f"Warning: Could not initialize LLM provider: {e}")
+                print("Continuing with local models only.")
     
     def _init_model(self):
         """Lazily initialize the model on first use"""
@@ -168,16 +190,25 @@ class SemanticEngine:
         results.sort(key=lambda x: x['similarity'], reverse=True)
         return results[:top_k]
     
-    def extract_key_concepts(self, text: str) -> List[str]:
+    def extract_key_concepts(self, text: str, use_llm: bool = True) -> List[str]:
         """
-        Extract key concepts from text (simplified version)
+        Extract key concepts from text
         
         Args:
             text: Text to analyze
+            use_llm: Whether to use LLM for extraction if available
             
         Returns:
             List of key concepts
         """
+        # Use LLM if available and requested
+        if use_llm and self.llm_client and self.llm_client.is_available():
+            try:
+                return self.llm_client.extract_key_concepts(text)
+            except Exception as e:
+                print(f"Warning: LLM concept extraction failed: {e}")
+                print("Falling back to simple extraction.")
+        
         # Simple implementation: extract longer words and phrases
         words = text.split()
         concepts = []
@@ -192,16 +223,25 @@ class SemanticEngine:
         # Return unique concepts
         return list(set(concepts))[:10]
     
-    def categorize_content(self, text: str) -> str:
+    def categorize_content(self, text: str, use_llm: bool = True) -> str:
         """
-        Automatically categorize content (simplified version)
+        Automatically categorize content
         
         Args:
             text: Text to categorize
+            use_llm: Whether to use LLM for categorization if available
             
         Returns:
             Category name
         """
+        # Use LLM if available and requested
+        if use_llm and self.llm_client and self.llm_client.is_available():
+            try:
+                return self.llm_client.categorize(text)
+            except Exception as e:
+                print(f"Warning: LLM categorization failed: {e}")
+                print("Falling back to simple categorization.")
+        
         text_lower = text.lower()
         
         # Simple keyword-based categorization
@@ -215,3 +255,66 @@ class SemanticEngine:
             return 'data'
         else:
             return 'general'
+    
+    def summarize(self, text: str, max_length: int = 200) -> str:
+        """
+        Summarize text
+        
+        Args:
+            text: Text to summarize
+            max_length: Maximum length in words
+            
+        Returns:
+            Summary text
+        """
+        if self.llm_client and self.llm_client.is_available():
+            try:
+                return self.llm_client.summarize(text, max_length)
+            except Exception as e:
+                print(f"Warning: LLM summarization failed: {e}")
+                print("Falling back to simple truncation.")
+        
+        # Fallback: simple truncation
+        words = text.split()
+        if len(words) <= max_length:
+            return text
+        return ' '.join(words[:max_length]) + '...'
+    
+    def answer_question(self, question: str, context: str) -> str:
+        """
+        Answer a question based on context
+        
+        Args:
+            question: Question to answer
+            context: Context to use for answering
+            
+        Returns:
+            Answer text
+        """
+        if self.llm_client and self.llm_client.is_available():
+            try:
+                return self.llm_client.answer_question(question, context)
+            except Exception as e:
+                print(f"Warning: LLM question answering failed: {e}")
+                return "LLM not available or error occurred."
+        
+        return "LLM not available. Please configure Claude or Gemini API."
+    
+    def generate_insights(self, text: str) -> str:
+        """
+        Generate insights about text
+        
+        Args:
+            text: Text to analyze
+            
+        Returns:
+            Insights text
+        """
+        if self.llm_client and self.llm_client.is_available():
+            try:
+                return self.llm_client.generate_insights(text)
+            except Exception as e:
+                print(f"Warning: LLM insight generation failed: {e}")
+                return "LLM not available or error occurred."
+        
+        return "LLM not available. Please configure Claude or Gemini API."
