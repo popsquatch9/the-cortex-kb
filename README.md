@@ -2,7 +2,10 @@
 
 A smart personal knowledge base that reads, reasons, understands, and organizes information. Cortex automatically discovers related external sources and builds a carefully vetted, intuitively organized personal database.
 
-> **📌 Note**: This is a **Python CLI application**, not a web app. See [DEPLOYMENT.md](DEPLOYMENT.md) for how to run it (GitHub Pages is not suitable for Python apps).
+> **📌 How to Launch?** This is a **Python CLI application**, not a web app. 
+> - ❌ **GitHub Pages won't work** (it's for static websites only)
+> - ✅ **Use local install or Docker** - See [HOW_TO_LAUNCH.md](HOW_TO_LAUNCH.md) for all options
+> - ✅ **Quick start**: Run `./install.sh` or see [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Features
 
