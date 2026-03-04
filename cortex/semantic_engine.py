@@ -6,7 +6,22 @@ Provides intelligent search and understanding capabilities
 import os
 from typing import List, Dict, Any, Optional
 import numpy as np
-from sentence_transformers import SentenceTransformer
+
+# Lazy import – sentence_transformers pulls in torch which may not work on
+# every Python version (e.g. 3.14).  We defer the import to first use so
+# the rest of the application can still start up with fallback similarity.
+SentenceTransformer = None  # will be set by _lazy_import_st()
+
+def _lazy_import_st():
+    global SentenceTransformer
+    if SentenceTransformer is not None:
+        return
+    try:
+        from sentence_transformers import SentenceTransformer as _ST
+        SentenceTransformer = _ST
+    except Exception as e:
+        print(f"Warning: Could not import sentence_transformers: {e}")
+        print("Falling back to simple text similarity.")
 
 try:
     from .llm_provider import LLMClient
@@ -54,8 +69,12 @@ class SemanticEngine:
     def _init_model(self):
         """Lazily initialize the model on first use"""
         if self.model is None:
+            _lazy_import_st()
             try:
-                self.model = SentenceTransformer(self.model_name)
+                if SentenceTransformer is not None:
+                    self.model = SentenceTransformer(self.model_name)
+                else:
+                    raise RuntimeError("sentence_transformers unavailable")
             except Exception as e:
                 print(f"Warning: Could not load sentence transformer model: {e}")
                 print("Falling back to simple text similarity.")

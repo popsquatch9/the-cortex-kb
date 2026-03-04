@@ -1,1 +1,1 @@
-web: python cortex_cli.py stats
+web: python main.py

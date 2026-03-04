@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cortex · Personal Knowledge Base</title>
+
+  <!-- Google Fonts – old‑world serifs + elegant sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+</head>
+<body>
+
+<!-- Ambient film‑grain overlay -->
+<div class="grain"></div>
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo-group">
+      <span class="logo-icon">🧠</span>
+      <div>
+        <h1 class="logo-title">The Cortex</h1>
+        <p class="logo-sub">Personal Knowledge Base</p>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-view="library">
+        <span class="nav-icon">📚</span> Library
+      </button>
+      <button class="nav-btn" data-view="search">
+        <span class="nav-icon">🔍</span> Search
+      </button>
+      <button class="nav-btn" data-view="add">
+        <span class="nav-icon">✒️</span> Add
+      </button>
+      <button class="nav-btn" data-view="graph">
+        <span class="nav-icon">🕸️</span> Graph
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     HERO / STATS RIBBON
+     ═══════════════════════════════════════════════ -->
+<section class="hero-ribbon">
+  <div class="hero-inner">
+    <div class="stat-card">
+      <span class="stat-value" id="stat-nodes">—</span>
+      <span class="stat-label">Documents</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-edges">—</span>
+      <span class="stat-label">Connections</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-categories">—</span>
+      <span class="stat-label">Categories</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="stat-types">—</span>
+      <span class="stat-label">Types</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     VIEWS
+     ═══════════════════════════════════════════════ -->
+<main class="main-content">
+
+  <!-- ─── LIBRARY VIEW ─── -->
+  <section class="view active" id="view-library">
+    <div class="section-head">
+      <h2 class="section-title">📖 The Library</h2>
+      <p class="section-sub">Every thought, every page, every connection — preserved.</p>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-chip active" data-category="all">All</button>
+      <!-- chips injected dynamically -->
+    </div>
+
+    <div class="card-grid" id="library-grid">
+      <!-- document cards injected here -->
+    </div>
+    <div class="empty-state" id="library-empty">
+      <div class="empty-illustration">📜</div>
+      <p>The shelves are bare. Add your first document to begin.</p>
+    </div>
+  </section>
+
+  <!-- ─── SEARCH VIEW ─── -->
+  <section class="view" id="view-search">
+    <div class="section-head">
+      <h2 class="section-title">🔍 Search the Archive</h2>
+      <p class="section-sub">Seek and ye shall find — across every note, document, and thought.</p>
+    </div>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="search-input"
+        class="search-input"
+        placeholder="Search for anything…"
+        autocomplete="off"
+      />
+      <button class="search-go" id="search-go">Search</button>
+    </div>
+
+    <div class="results-area" id="search-results">
+      <!-- results injected here -->
+    </div>
+    <div class="empty-state" id="search-empty" style="display:none;">
+      <div class="empty-illustration">🕯️</div>
+      <p>No results yet. Type a query and press Enter.</p>
+    </div>
+  </section>
+
+  <!-- ─── ADD VIEW ─── -->
+  <section class="view" id="view-add">
+    <div class="section-head">
+      <h2 class="section-title">✒️ Add to the Collection</h2>
+      <p class="section-sub">Pen a thought, paste a passage, or upload a manuscript.</p>
+    </div>
+
+    <div class="add-form-wrap">
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="text">Write Text</button>
+        <button class="tab-btn" data-tab="file">Upload File</button>
+      </div>
+
+      <!-- Text Tab -->
+      <div class="tab-panel active" id="tab-text">
+        <label class="field-label" for="add-title">Title <span class="optional">(optional)</span></label>
+        <input type="text" id="add-title" class="field-input" placeholder="e.g. Notes on Proust" />
+
+        <label class="field-label" for="add-content">Content</label>
+        <textarea id="add-content" class="field-textarea" rows="10"
+          placeholder="Paste or write your text here…"></textarea>
+
+        <div class="form-actions">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="add-discover" checked />
+            <span>Discover related sources</span>
+          </label>
+          <button class="btn-primary" id="btn-add-text">Add to Knowledge Base</button>
+        </div>
+      </div>
+
+      <!-- File Tab -->
+      <div class="tab-panel" id="tab-file">
+        <div class="file-drop" id="file-drop">
+          <div class="file-drop-inner">
+            <span class="file-icon">📄</span>
+            <p>Drop a file here, or <label for="file-input" class="file-browse">browse</label></p>
+            <input type="file" id="file-input" accept=".md,.txt,.yaml,.yml,.json,.csv" hidden />
+            <span class="file-hint">Supports: .md, .txt, .yaml, .json, .csv</span>
+          </div>
+        </div>
+        <div class="form-actions">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="file-discover" checked />
+            <span>Discover related sources</span>
+          </label>
+          <button class="btn-primary" id="btn-add-file" disabled>Upload &amp; Index</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GRAPH VIEW ─── -->
+  <section class="view" id="view-graph">
+    <div class="section-head">
+      <h2 class="section-title">🕸️ Knowledge Graph</h2>
+      <p class="section-sub">Behold the constellation of your collected wisdom.</p>
+    </div>
+
+    <div class="graph-container" id="graph-container">
+      <canvas id="graph-canvas"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT DETAIL MODAL
+     ═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-card" id="modal-card">
+    <button class="modal-close" id="modal-close">&times;</button>
+    <div class="modal-header">
+      <span class="modal-category" id="modal-category"></span>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p class="modal-meta" id="modal-meta"></p>
+    </div>
+    <div class="modal-body">
+      <div class="modal-concepts" id="modal-concepts"></div>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+    <div class="modal-footer">
+      <h3 class="modal-section-title">Related Documents</h3>
+      <div class="modal-related" id="modal-related"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     TOAST
+     ═══════════════════════════════════════════════ -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <p>&copy; Cortex Knowledge Base &middot; <em>"Collect, Connect, Comprehend."</em></p>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
