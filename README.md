@@ -2,6 +2,8 @@
 
 A smart personal knowledge base that reads, reasons, understands, and organizes information. Cortex automatically discovers related external sources and builds a carefully vetted, intuitively organized personal database.
 
+> **📌 Note**: This is a **Python CLI application**, not a web app. See [DEPLOYMENT.md](DEPLOYMENT.md) for how to run it (GitHub Pages is not suitable for Python apps).
+
 ## Features
 
 - **Intelligent Ingestion**: Reads and processes multiple document formats (Markdown, JSON, TXT, HTML)
@@ -12,14 +14,17 @@ A smart personal knowledge base that reads, reasons, understands, and organizes 
 - **Quality Vetting**: Evaluates external sources for quality and relevance
 - **Semantic Search**: Find related content based on meaning, not just text matching
 
-## Installation
+## Quick Installation
 
-### Prerequisites
+### One-Command Install (Recommended)
 
-- Python 3.8 or higher
-- pip package manager
+```bash
+git clone https://github.com/popsquatch9/the-cortex-kb.git
+cd the-cortex-kb
+./install.sh
+```
 
-### Setup
+### Manual Installation
 
 1. Clone the repository:
 ```bash
@@ -36,6 +41,20 @@ pip install -r requirements.txt
 ```bash
 cp .env.example .env
 # Edit .env to customize settings
+```
+
+### Docker Installation
+
+```bash
+docker build -t cortex-kb .
+docker run -it -v $(pwd)/cortex_data:/app/cortex_data cortex-kb
+```
+
+### pip Install (From Source)
+
+```bash
+pip install -e .
+cortex --help  # Now available system-wide
 ```
 
 ## Quick Start
@@ -192,9 +211,32 @@ Documents are:
 - Connected to related documents
 - Organized in an easily navigable graph structure
 
+## Deployment Options
+
+**Important**: Cortex is a Python CLI application, **not a web application**. GitHub Pages is for static websites and **cannot host Python apps**.
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive deployment guide including:
+- **Local Installation**: Run on your personal computer
+- **Docker**: Containerized deployment
+- **Cloud Deployment**: Deploy to VPS or cloud instances
+- **PyPI Package**: Install with pip (future)
+
+Quick deploy options:
+```bash
+# Local with virtual environment
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+
+# Docker
+docker-compose up -d
+
+# System-wide install
+pip install -e .
+```
+
 ## Configuration
 
-Create a `.env` file to customize settings:
+Create a `.env` file based on `.env.example`:
 
 ```bash
 # Data storage location

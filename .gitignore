@@ -18,13 +18,15 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 venv/
 ENV/
 env/
+.venv
 
 .env
-.venv
+.env.local
 
 *.db
 *.sqlite
@@ -36,3 +38,20 @@ env/
 
 cortex_data/
 *.log
+
+# Docker
+.dockerignore
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Backup files
+*.bak
+*.swp
+*~
+
+# OS files
+Thumbs.db
+

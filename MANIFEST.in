@@ -1,0 +1,12 @@
+include README.md
+include QUICKSTART.md
+include DEPLOYMENT.md
+include IMPLEMENTATION_SUMMARY.md
+include LICENSE
+include requirements.txt
+include .env.example
+recursive-include cortex *.py
+recursive-include examples *.md *.txt *.json
+recursive-include tests *.py
+global-exclude __pycache__
+global-exclude *.py[co]

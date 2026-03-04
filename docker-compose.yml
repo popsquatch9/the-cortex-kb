@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  cortex-kb:
+    build: .
+    container_name: cortex-knowledge-base
+    volumes:
+      # Mount data directory for persistence
+      - ./cortex_data:/app/cortex_data
+      # Mount examples directory
+      - ./examples:/app/examples
+    environment:
+      - DATA_DIR=/app/cortex_data
+      - ENABLE_WEB_SEARCH=true
+      - RELEVANCE_THRESHOLD=0.7
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+# Usage:
+# docker-compose up -d
+# docker-compose exec cortex-kb python cortex_cli.py add examples/machine_learning.md
+# docker-compose exec cortex-kb python cortex_cli.py search "machine learning"
+# docker-compose exec cortex-kb python cortex_cli.py stats
+# docker-compose down
