@@ -2,6 +2,8 @@
 
 A smart personal knowledge base that reads, reasons, understands, and organizes information. Cortex automatically discovers related external sources and builds a carefully vetted, intuitively organized personal database.
 
+> **📚 New to Cortex?** Check the [📖 Documentation Index](DOCUMENTATION_INDEX.md) to find the right guide for your needs!
+
 > **📌 How to Launch?** This is a **Python CLI application**, not a web app. 
 > - ❌ **GitHub Pages won't work** (it's for static websites only)
 > - ✅ **Use local install or Docker** - See [HOW_TO_LAUNCH.md](HOW_TO_LAUNCH.md) for all options
@@ -312,6 +314,36 @@ See `requirements.txt` for full dependencies. Key packages:
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues.
+
+## 📚 Documentation
+
+Can't find what you're looking for? We have comprehensive documentation:
+
+**📖 [Documentation Index](DOCUMENTATION_INDEX.md)** - Complete guide to all documentation files
+
+**Quick Links**:
+- 🚀 **Quick Start**: [QUICKSTART.md](QUICKSTART.md) - Get started in 5 minutes
+- ☁️ **Cloud Deploy**: [CLOUD_QUICKSTART.md](CLOUD_QUICKSTART.md) - Deploy to cloud in 2-5 minutes
+- 🔧 **Installation**: [DEPLOYMENT.md](DEPLOYMENT.md) - All installation methods
+- ❓ **FAQ**: [DEPLOYMENT_FAQ.md](DEPLOYMENT_FAQ.md) - Common questions answered
+- 🏗️ **Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md) - Technical details
+
+**All Documentation Files**:
+```
+README.md              - This file (project overview)
+DOCUMENTATION_INDEX.md - Guide to all documentation
+QUICKSTART.md          - 5-minute quick start
+HOW_TO_LAUNCH.md       - All deployment options
+CLOUD_QUICKSTART.md    - Fast cloud deployment
+CLOUD_COMPARISON.md    - Compare cloud platforms
+CLOUD_DEPLOY.md        - Comprehensive cloud guide
+DEPLOYMENT.md          - All deployment methods
+DEPLOYMENT_FAQ.md      - Deployment Q&A
+ARCHITECTURE.md        - System architecture
+IMPLEMENTATION_SUMMARY.md - Technical implementation
+```
+
+See [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) for a complete navigation guide!
 
 ## License
 
