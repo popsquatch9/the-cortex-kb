@@ -23,17 +23,26 @@ We've simplified cloud deployment to be as easy as local installation. Here are 
 These platforms handle everything for you:
 
 #### Railway.app
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/cortex-kb)
 
-1. Click the button above or go to [Railway.app](https://railway.app)
-2. Connect your GitHub account
-3. Fork this repository
-4. Click "Deploy Now"
-5. Done! Railway handles everything automatically
+**Quick Deploy:**
+1. Click "Deploy on Railway" button above
+2. Connect your GitHub account (if not already)
+3. Repository will auto-fork and deploy
+4. Railway creates persistent volume automatically
+5. Access your deployment URL in Railway dashboard
+
+**Manual Setup:**
+1. Go to [Railway.app](https://railway.app)
+2. Click "New Project" → "Deploy from GitHub repo"
+3. Select `the-cortex-kb` repository
+4. Railway auto-detects Python and deploys
+5. Add a persistent volume in project settings
 
 **Persistence**: ✅ Built-in persistent volumes
-**Cost**: Free tier available, then ~$5/month
+**Cost**: Free tier available (500 hours/month), then ~$5/month
 **Difficulty**: ⭐ Very Easy
+**Setup Time**: 2-3 minutes
 
 #### Render.com
 1. Go to [Render.com](https://render.com)
