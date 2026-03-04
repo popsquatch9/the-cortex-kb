@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: cortex-kb
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python cortex_cli.py stats
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATA_DIR
+        value: /var/data/cortex_data
+    disk:
+      name: cortex-data
+      mountPath: /var/data
+      sizeGB: 1

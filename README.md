@@ -11,6 +11,22 @@ A smart personal knowledge base that reads, reasons, understands, and organizes 
 > 
 > **☁️ Is cloud deployment easy?** YES! One-command setup - see [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)
 
+## 🚀 Quick Cloud Deploy
+
+Deploy to the cloud in under 5 minutes:
+
+### One-Click Platforms
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/cortex-kb)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/popsquatch9/the-cortex-kb)
+
+### VPS One-Command Deploy
+```bash
+# Works on DigitalOcean, AWS, Linode, etc.
+curl -fsSL https://raw.githubusercontent.com/popsquatch9/the-cortex-kb/main/cloud-deploy.sh | bash
+```
+
+**See [CLOUD_QUICKSTART.md](CLOUD_QUICKSTART.md) for complete cloud deployment guide!**
+
 ## Features
 
 - **Intelligent Ingestion**: Reads and processes multiple document formats (Markdown, JSON, TXT, HTML)

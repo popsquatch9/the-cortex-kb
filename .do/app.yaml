@@ -1,0 +1,19 @@
+name: cortex-kb
+region: nyc
+services:
+  - name: cortex-knowledge-base
+    type: worker
+    instance_size_slug: basic-xxs
+    github:
+      repo: popsquatch9/the-cortex-kb
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    run_command: python cortex_cli.py stats
+    envs:
+      - key: DATA_DIR
+        value: ${cortex-data.FOLDER}
+volumes:
+  - name: cortex-data
+    size: 1GiB
+    filesystem_path: /var/data
