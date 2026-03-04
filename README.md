@@ -2,6 +2,8 @@
 
 A smart personal knowledge base that reads, reasons, understands, and organizes information. Cortex automatically discovers related external sources and builds a carefully vetted, intuitively organized personal database.
 
+**🆕 Now with AI superpowers!** Integrated support for **Anthropic Claude** and **Google Gemini** APIs for advanced reasoning, summarization, and question answering.
+
 > **📚 New to Cortex?** Check the [📖 Documentation Index](DOCUMENTATION_INDEX.md) to find the right guide for your needs!
 
 > **📌 How to Launch?** This is a **Python CLI application**, not a web app. 
@@ -12,6 +14,8 @@ A smart personal knowledge base that reads, reasons, understands, and organizes 
 > **💾 Is data persistent?** YES! All installations save data permanently to disk.
 > 
 > **☁️ Is cloud deployment easy?** YES! One-command setup - see [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)
+> 
+> **🤖 Want AI features?** Use Anthropic Claude or Google Gemini - see [LLM_INTEGRATION.md](LLM_INTEGRATION.md)
 
 ## 🚀 Quick Cloud Deploy
 
@@ -28,6 +32,36 @@ curl -fsSL https://raw.githubusercontent.com/popsquatch9/the-cortex-kb/main/clou
 ```
 
 **See [CLOUD_QUICKSTART.md](CLOUD_QUICKSTART.md) for complete cloud deployment guide!**
+
+## 🤖 AI-Powered Features
+
+Cortex supports **Anthropic Claude** and **Google Gemini** for advanced AI capabilities:
+
+### Supported LLM Providers
+- **Anthropic Claude** - Advanced reasoning and analysis
+- **Google Gemini Pro** - Google Workspace integration
+
+### AI Features
+- 📝 **Smart Summarization** - AI-generated document summaries
+- ❓ **Question Answering** - Ask questions about your knowledge base
+- ✨ **Insights Generation** - Get AI insights about your documents
+- 🏷️ **Intelligent Categorization** - Better content organization
+- 🔑 **Concept Extraction** - AI-powered key concept identification
+
+### Quick Setup
+```bash
+# Choose your provider in .env
+LLM_PROVIDER=claude  # or 'gemini'
+ANTHROPIC_API_KEY=your-key-here  # for Claude
+# OR
+GOOGLE_API_KEY=your-key-here  # for Gemini
+
+# Install dependencies
+pip install anthropic  # for Claude
+pip install google-generativeai  # for Gemini
+```
+
+**See [LLM_INTEGRATION.md](LLM_INTEGRATION.md) for complete setup guide!**
 
 ## Features
 
