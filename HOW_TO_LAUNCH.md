@@ -52,16 +52,19 @@ cortex search "query"
 
 **Best for**: Remote access, always-on service
 
-```bash
-# SSH to your VPS/EC2/Digital Ocean instance
-ssh user@your-server.com
+**Is it easy?** YES! We have a one-command deployment script. See [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md) for details.
 
-# Install and run
-git clone https://github.com/popsquatch9/the-cortex-kb.git
-cd the-cortex-kb
-pip3 install -r requirements.txt
-python3 cortex_cli.py stats
+```bash
+# One-command cloud deployment
+curl -fsSL https://raw.githubusercontent.com/popsquatch9/the-cortex-kb/main/cloud-deploy.sh | bash
 ```
+
+Or use one-click platforms:
+- **Railway.app** - Deploy in 2 minutes
+- **Render.com** - Free tier available
+- **DigitalOcean** - Simple VPS ($6/month)
+
+See [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md) for complete cloud deployment guide with step-by-step instructions.
 
 ### 💻 Method 5: GitHub Codespaces
 
@@ -110,14 +113,16 @@ python cortex_cli.py export --format html --output docs/
 
 ## Comparison Table
 
-| Method | Difficulty | Use Case | Persistent Data |
-|--------|-----------|----------|-----------------|
-| Local Install | ⭐ Easy | Personal use | ✅ Yes |
-| Docker | ⭐⭐ Medium | Isolation, consistency | ✅ Yes (volumes) |
-| pip Install | ⭐ Easy | System-wide access | ✅ Yes |
-| Cloud Server | ⭐⭐⭐ Advanced | Remote access | ✅ Yes |
-| GitHub Codespaces | ⭐ Easy | Try before install | ⚠️ Temporary |
-| GitHub Pages | ❌ Not Possible | N/A | ❌ No |
+| Method | Difficulty | Use Case | Persistent Data | Setup Time |
+|--------|-----------|----------|-----------------|------------|
+| Local Install | ⭐ Easy | Personal use | ✅ Yes | 2-5 min |
+| Docker | ⭐⭐ Medium | Isolation, consistency | ✅ Yes (volumes) | 5 min |
+| pip Install | ⭐ Easy | System-wide access | ✅ Yes | 2 min |
+| Cloud Server | ⭐⭐ Easy | Remote access | ✅ Yes | 5 min |
+| GitHub Codespaces | ⭐ Easy | Try before install | ⚠️ Temporary | 3 min |
+| GitHub Pages | ❌ Not Possible | N/A | ❌ No | N/A |
+
+**Note**: All installation methods (except GitHub Codespaces) create PERSISTENT storage. Your data survives reboots!
 
 ## Quick Start Commands
 
@@ -151,11 +156,24 @@ python cortex_cli.py stats
 
 ## Common Questions
 
+**Q: Is my data persistent after installation?**
+A: **YES!** All installation methods (except GitHub Codespaces) store data permanently on disk:
+- Local: `./cortex_data/` directory
+- Cloud: `/var/lib/cortex-kb/` directory (configured automatically)
+- Docker: Persistent volumes
+Your knowledge base survives reboots, shutdowns, and restarts. Only GitHub Codespaces is temporary.
+
 **Q: Can I access Cortex from a web browser?**
 A: Not currently. It's a CLI tool. A web UI could be added in the future.
 
 **Q: Can I run it on Windows?**
 A: Yes! Use the install.sh script in Git Bash or WSL, or install manually with pip.
+
+**Q: Is cloud deployment difficult?**
+A: **No!** We have a one-command cloud deployment script. See [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md).
+```bash
+curl -fsSL https://raw.githubusercontent.com/popsquatch9/the-cortex-kb/main/cloud-deploy.sh | bash
+```
 
 **Q: Can I share my knowledge base?**
 A: Yes! You can:
@@ -175,10 +193,14 @@ A: Currently single-user. Multi-user features are on the roadmap.
 ## Getting Help
 
 - **Installation Issues**: See [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Cloud Deployment**: See [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md) - **Easy cloud setup in 5 minutes!**
 - **Usage Help**: See [QUICKSTART.md](QUICKSTART.md)
 - **Technical Details**: See [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)
 - **Command Help**: Run `python cortex_cli.py --help`
 
 ---
 
-**Summary**: Use local installation or Docker to launch Cortex. GitHub Pages is only for static websites and cannot run Python applications.
+**Summary**: 
+- ✅ **Persistence**: Your data is saved permanently to disk with all methods (except Codespaces)
+- ✅ **Cloud Deployment**: Easy! Use our one-command script or one-click platforms
+- ❌ **GitHub Pages**: Only for static websites, cannot run Python applications

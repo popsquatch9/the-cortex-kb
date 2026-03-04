@@ -6,6 +6,10 @@ A smart personal knowledge base that reads, reasons, understands, and organizes 
 > - ❌ **GitHub Pages won't work** (it's for static websites only)
 > - ✅ **Use local install or Docker** - See [HOW_TO_LAUNCH.md](HOW_TO_LAUNCH.md) for all options
 > - ✅ **Quick start**: Run `./install.sh` or see [DEPLOYMENT.md](DEPLOYMENT.md)
+> 
+> **💾 Is data persistent?** YES! All installations save data permanently to disk.
+> 
+> **☁️ Is cloud deployment easy?** YES! One-command setup - see [CLOUD_DEPLOY.md](CLOUD_DEPLOY.md)
 
 ## Features
 
